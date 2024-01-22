@@ -1,0 +1,71 @@
+// CAROUSEL
+.owl-carousel {
+    position: relative;
+    overflow: hidden;
+    .owl-nav {
+        .owl-prev, .owl-next {
+            color: var(--black);
+            opacity: 0;
+            padding: 0px;
+            font-size: 20px;
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            transition: 0.3s;
+        }
+        .owl-prev {
+            left: -30px;
+            @include media-xs {
+                left: 0;
+            }
+        }
+        .owl-next {
+            right: -30px;
+            @include media-xs {
+                right: 0;
+            }
+        }
+    }
+    &:hover {
+        .owl-nav .owl-next, .owl-nav .owl-prev {
+            opacity: 1;
+        }
+        .owl-nav .owl-next {
+            right: 0px;
+        }
+        .owl-nav .owl-prev {
+            left: 0px;
+        }
+    }
+    .owl-dots {
+        text-align: center;
+        -webkit-tap-highlight-color: transparent;
+        position: absolute;
+        width: 100%;
+        bottom: 20px;
+        
+        .owl-dot {
+            display: inline-block;
+            zoom: 1;
+            *display: inline;
+            
+            span {
+                width: 10px;
+                height: 10px;
+                margin: 5px 7px;
+                background: #D6D6D6;
+                display: block;
+                -webkit-backface-visibility: visible;
+                transition: opacity 200ms ease;
+                border-radius: 30px;
+            }
+            
+            &.active, &:hover {
+                span {
+                    background: var(--primary-color);
+                }
+            }
+            
+        }
+    }
+}

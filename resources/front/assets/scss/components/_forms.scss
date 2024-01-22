@@ -1,0 +1,85 @@
+.grecaptcha-badge{
+    bottom: 200px !important;
+    @include media-xs {
+        display: none !important;
+    }
+}
+
+form {
+    
+    .form-password {
+        position: relative;
+        #form-eye {
+            cursor: pointer;
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        .form-control:valid, .form-control:invalid {
+            background-position: right calc(0.375em + 2.1875rem) center;
+        }
+        .was-validated .form-control:valid, .was-validated .form-control:invalid {
+            padding-right: calc(1.5em + 2.75rem);
+        }
+    }
+    
+    &.was-validated .form-control:invalid {
+        background-image: url("../../../images/warning-invalid.svg");
+    }
+    
+    &.was-validated {
+        input:invalid, select:invalid, textarea:invalid {
+            animation: shake 300ms;
+        }
+    }
+
+    @keyframes shake {
+        25% { transform: translateX(4px); }
+        50% { transform: translateX(-4px); }
+        75% { transform: translateX(4px); }
+    }
+    
+    .file {
+        cursor: pointer;
+        position: relative;
+        display: flex;
+        width: 100%;
+        padding-top: 0;
+        padding-bottom: 0;
+        padding-left: 0;
+        
+        #customFile {
+            display: none !important;
+        }
+        
+        #fileInputName {
+            align-items: center;
+            display: flex;
+        }
+
+        .file-button {
+            background-color: black;
+            color: white;
+            font-size: 16px;
+            font-weight: 400;
+            @include border-radius(6px);
+            padding: 7px 20px;
+            display: inline-block;
+            z-index: 2;
+            position: relative;
+            min-width: 195px;
+            text-align: center;
+            margin: 0 10px 0 0;
+        }
+
+        img {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+    }
+    
+}

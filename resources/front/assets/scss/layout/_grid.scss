@@ -1,0 +1,12 @@
+// GRID
+@media (min-width: 1700px) {
+    .container, .container-lg, .container-md, .container-sm, .container-xl, .container-xxl {
+        max-width: 1640px;
+    }
+}
+.row {
+    --bs-gutter-x: 16px;
+    @include media-sm {
+        --bs-gutter-x: 8px;
+    }
+}

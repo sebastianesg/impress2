@@ -1,0 +1,72 @@
+{
+  "menu": [
+    {
+        "url": "",
+        "name": "Dashboard",
+        "icon": "home",
+        "slug": "dashboard",
+        "roles": "Vendedor"
+    },
+    {
+        "url": "admins",
+        "name": "Administradores",
+        "icon": "users",
+        "slug": "admins",
+        "roles": "Vendedor"
+
+    },
+    {
+        "url": "products",
+        "name": "Productos",
+        "icon": "users",
+        "slug": "products",
+        "roles": "Vendedor"
+
+    },
+    {
+        "url": "orders",
+        "name": "Pedidos",
+        "icon": "users",
+        "slug": "orders",
+        "roles": "Vendedor"
+
+    },
+    {
+        "url": "clients",
+        "name": "Clientes",
+        "icon": "users",
+        "slug": "clients",
+        "roles": "Vendedor"
+
+    },
+    {
+        "url": "responsible-for-realization",
+        "name": "Mis pedidos",
+        "icon": "users",
+        "slug": "responsible-for-realization",
+        "roles": "Vendedor"
+
+    },
+    {
+        "url": "responsible-for-shipping",
+        "name": "Mis Envios",
+        "icon": "users",
+        "slug": "responsible-for-shipping",
+        "roles": "Vendedor"
+
+    },
+    {
+        "navheader": "Configuración",
+        "slug": ""
+
+    },
+    {
+        "url": "variables",
+        "name": "Variables",
+        "icon": "settings",
+        "slug": "variables",
+        "roles": "Vendedor"
+
+    }
+  ]
+}
