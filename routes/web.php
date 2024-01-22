@@ -25,7 +25,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
 
     Route::get($cmsUrl.'/', [DashboardController::class, 'dashboard'])->name('dashboard');
 
-    Route::resource($cmsUrl.'/admins', AdminController::class, ['names' => ['index' => 'admins']]);
+    Route::resource($cmsUrl.'/admins', AdminController::class, ['names' => ['index' => 'admins']])->middleware('check-permission:Administrador');
 
     Route::resource($cmsUrl.'/roles', RolController::class, ['names' => ['index' => 'roles']]);
 
@@ -52,16 +52,16 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
     Route::post($cmsUrl.'/chat/sendMessage', [ChatController::class, 'sendMessage'])->where('uid', '.*')->name('chat.send');
 
     //products
-    Route::resource($cmsUrl.'/products', ProductController::class)->middleware('check-permission:Vendedor');;
+    Route::resource($cmsUrl.'/products', ProductController::class)->middleware('check-permission:Administrador,Vendedor');
 
     Route::get($cmsUrl.'/producto/api', [ProductController::class, 'api'])->name('products.api');
 
     Route::get($cmsUrl.'/getPdfPrice', [ProductController::class, 'getPdfPrice'])->name('getPdfPrice');
 
-    Route::resource($cmsUrl.'/orders', OrderController::class);
+    Route::resource($cmsUrl.'/orders', OrderController::class)->middleware('check-permission:Administrador,Vendedor');
     Route::put('/orders/{orderId}/products/{productId}/mark-completed', [OrderController::class, 'markProductCompleted'])->name('orders.markProductCompleted');
     Route::put('/orders/{orderId}/mark-completed', [OrderController::class, 'markOrderCompleted'])->name('orders.markOrderCompleted');
-    Route::resource($cmsUrl.'/clients', ClientController::class);
+    Route::resource($cmsUrl.'/clients', ClientController::class)->middleware('check-permission:Administrador,Vendedor');
 
     Route::get($cmsUrl.'/responsible-for-realization', [OrderController::class, 'ordersResponsibleForRealization'])
     ->name('orders.responsibleForRealization');
