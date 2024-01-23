@@ -25,7 +25,7 @@ class OrderController extends Controller
     {
         $users = User::all();
         $clients = Client::all();
-        $pagePrice = Variable::where('name', 'PAGE_PRICE')->value('value');
+        $pagePrice = Product::where('name', 'Impresiones personales')->value('price');
         return view('cms.orders.create',['mode'=>'create','users'=>$users,'clients'=>$clients,'pagePrice'=>$pagePrice]);
     }
 

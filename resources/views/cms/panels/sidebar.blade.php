@@ -23,8 +23,10 @@ $configData = Helper::applClasses();
     <div class="main-menu-content">
         <ul class="navigation navigation-main" id="main-menu-navigation" data-menu="menu-navigation">
         {{-- Foreach menu item starts --}}
+        
         @if (isset($menuData[0]))
             @foreach ($menuData[0]->menu as $menu)
+            @if (in_array(Auth::user()->rol->name, $menu->roles))
             @if (isset($menu->navheader))
                 <li class="navigation-header">
                     <span>{{ __('menu.' . $menu->navheader) }}</span>
@@ -48,6 +50,7 @@ $configData = Helper::applClasses();
                 </a>
                 @if (isset($menu->submenu)) @include('cms/panels/submenu', ['menu' => $menu->submenu]) @endif
             </li>
+            @endif
             @endif
             @endforeach
         @endif

@@ -5,67 +5,53 @@
         "name": "Dashboard",
         "icon": "home",
         "slug": "dashboard",
-        "roles": "Vendedor"
+        "roles": ["Administrador","Vendedor"]
     },
     {
         "url": "admins",
         "name": "Administradores",
         "icon": "users",
         "slug": "admins",
-        "roles": "Vendedor"
+        "roles": ["Administrador","Vendedor"]
 
     },
     {
         "url": "products",
         "name": "Productos",
-        "icon": "users",
+        "icon": "book",
         "slug": "products",
-        "roles": "Vendedor"
+        "roles": ["Administrador","Vendedor"]
 
     },
     {
         "url": "orders",
         "name": "Pedidos",
-        "icon": "users",
+        "icon": "box",
         "slug": "orders",
-        "roles": "Vendedor"
+        "roles": ["Administrador","Vendedor"]
 
     },
     {
         "url": "clients",
         "name": "Clientes",
-        "icon": "users",
+        "icon": "user",
         "slug": "clients",
-        "roles": "Vendedor"
+        "roles": ["Administrador","Vendedor"]
 
     },
     {
         "url": "responsible-for-realization",
         "name": "Mis pedidos",
-        "icon": "users",
+        "icon": "printer",
         "slug": "responsible-for-realization",
-        "roles": "Vendedor"
-
+        "roles": ["Administrador","Vendedor","Imprimir","Imrime-Envia"]
     },
     {
         "url": "responsible-for-shipping",
         "name": "Mis Envios",
-        "icon": "users",
+        "icon": "send",
         "slug": "responsible-for-shipping",
-        "roles": "Vendedor"
-
-    },
-    {
-        "navheader": "Configuración",
-        "slug": ""
-
-    },
-    {
-        "url": "variables",
-        "name": "Variables",
-        "icon": "settings",
-        "slug": "variables",
-        "roles": "Vendedor"
+        "roles": ["Administrador","Vendedor","Enviar","Imrime-Envia"]
 
     }
   ]
