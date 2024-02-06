@@ -47,7 +47,7 @@
                                 <td>{{ $order->realizer->name ?? 'N/A' }}</td>
                                 <td>{{ $order->shipper->name ?? 'N/A' }}</td>
                                 <td>
-                                    <a href="{{ route('orders.show', $order->id) }}" class="btn btn-info btn-sm">Ver Detalles</a>
+                                    <a href="{{ route('orders.edit', $order->id) }}" class="btn btn-info btn-sm">Ver Detalles</a>
                                     <form action="{{ route('orders.destroy', $order->id) }}" method="POST" style="display:inline;">
                                         @csrf
                                         @method('DELETE')

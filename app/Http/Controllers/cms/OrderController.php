@@ -34,48 +34,88 @@ class OrderController extends Controller
         $request->validate([
             'order_details' => 'required',
         ]);
+    
+        // Decodificar el JSON en un array
+        $productData = json_decode($request->input('product_data'), true);
+    
         $userId = auth()->user()->id;
-        $data = array_merge($request->all(), ['user_id' => $userId,'estado' => 'pendiente']);
-
+        $data = array_merge($request->all(), ['user_id' => $userId, 'estado' => 'pendiente']);
+    
         $order = Order::create($data);
-        Log::info($request->all());
-        $productData = [];
-        if ($request->input('products')){            
-            foreach ($request->input('products') as $productId) {
-                $product = Product::find($productId);
-                $productData[$productId] = ['precio' => $product->price, 'estado' => 'pendiente'];
-            }}
+    
+        if ($productData) {
+            foreach ($productData as $product) {
+                $product = Product::find($product['id']);
+                $order->products()->attach($product['id'], ['precio' => $product['price'], 'estado' => 'pendiente']);
+            }
+        }
+    
         $customLinks = $request->input('custom_links');
         $customQuantities = $request->input('custom_quantities');
         $customPrices = $request->input('custom_prices');
-        if ($request->input('custom_links')){    
-        foreach ($customLinks as $index => $customLink) {
-            $customProduct = CustmoProduct::create([
-                'path' => $customLink,
-                'price' => $customPrices[$index],
-                'pages' => $customQuantities[$index],
-            ]);
-            $order->custmoProducts()->attach($customProduct->id);
-        }}
     
-        // Asocia los productos con precios a la orden
-        $order->products()->attach($productData);
-        return redirect()->route('orders.index')
-            ->with('success', 'Order created successfully.');
+        if ($customLinks) {
+            foreach ($customLinks as $index => $customLink) {
+                $customProduct = CustmoProduct::create([
+                    'path' => $customLink,
+                    'price' => $customPrices[$index],
+                    'pages' => $customQuantities[$index],
+                ]);
+                $order->custmoProducts()->attach($customProduct->id);
+            }
+        }
+    
+        return redirect()->route('orders.index')->with('success', 'Order created successfully.');
     }
 
     public function edit(Order $order)
     {
-        return view('orders.edit', compact('order'));
+        $users = User::all();
+        $clients = Client::all();
+        $pagePrice = Product::where('name', 'Impresiones personales')->value('price');
+        return view('cms.orders.create',['mode'=>'edit','order'=>$order,'users'=>$users,'clients'=>$clients,'pagePrice'=>$pagePrice]);
     }
 
-    public function update(Request $request, Order $order)
+    public function update(Request $request, $id)
     {
-        
+        $order = Order::findOrFail($id);
+    
+        $request->validate([
+            'order_details' => 'required',
+        ]);
+    
         $order->update($request->all());
-
+    
+        // Actualiza los productos asociados a la orden
+        $productData = [];
+        if ($request->input('products')) {            
+            foreach ($request->input('products') as $productId) {
+                $product = Product::find($productId);
+                $productData[$productId] = ['precio' => $product->price, 'estado' => 'pendiente'];
+            }
+        }
+        $order->products()->sync($productData);
+    
+        // Actualiza los productos personalizados asociados a la orden
+        $customLinks = $request->input('custom_links');
+        $customQuantities = $request->input('custom_quantities');
+        $customPrices = $request->input('custom_prices');
+        if ($request->input('custom_links')) {    
+            foreach ($customLinks as $index => $customLink) {
+                $customProduct = CustmoProduct::updateOrCreate(
+                    ['id' => $request->input('custom_product_ids.' . $index)], // Cambia esto por el nombre correcto del campo que almacena el ID del producto personalizado
+                    [
+                        'path' => $customLink,
+                        'price' => $customPrices[$index],
+                        'pages' => $customQuantities[$index],
+                    ]
+                );
+                $order->custmoProducts()->sync([$customProduct->id]);
+            }
+        }
+    
         return redirect()->route('orders.index')
-            ->with('success', 'Order updated successfully');
+            ->with('success', 'Order updated successfully.');
     }
 
     public function destroy(Order $order)
@@ -89,7 +129,9 @@ class OrderController extends Controller
 {
     $order = Order::findOrFail($id);
     $users = User::all();
-    return view('cms.orders.show', compact('order', 'users'));
+    $clients = Client::all();
+    $orderInfo = json_encode($order);
+    return view('cms.orders.show', compact('order', 'users','clients','orderInfo'));
 }
 public function markProductCompleted($orderId, $productId)
 {
@@ -170,5 +212,16 @@ public function markAsSent($orderId)
     // Si el estado no es "ready", puedes devolver un error u otra respuesta
     return response()->json(['message' => 'La orden no está en estado listo para enviar'], 422);
 }
+public function generatePdf(Request $request)
+{
+        // Crear instancia de TCPDF
+        $pdf = new TCPDF();
+        $pdf->AddPage();
 
+        // Obtener contenido como cadena
+        $pdfContent = $pdf->Output('', 'S');
+
+        // Retornar el contenido codificado en base64
+        return response()->json(['pdf' => base64_encode($pdfContent)]);
+    }
 }

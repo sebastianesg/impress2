@@ -9,7 +9,7 @@ use App\Http\Controllers\cms\ProductController;
 use App\Http\Controllers\cms\OrderController;
 use App\Http\Controllers\cms\ClientController;
 use App\Http\Controllers\cms\VariablesController;
-
+use App\Http\Controllers\cms\ComboController;
 use Illuminate\Support\Facades\Route;
 
 // locale Route
@@ -76,6 +76,10 @@ Route::post('update-prices', [ProductController::class, 'updatePrices'])->name('
 
 Route::get($cmsUrl.'/import', [ProductController::class, 'showImportForm'])->name('products.import.form');
 Route::post($cmsUrl.'/import', [ProductController::class, 'importProducts'])->name('products.import');
+Route::post($cmsUrl.'/generate-pdf', [OrderController::class, 'generatePdf']);
+Route::resource($cmsUrl.'/combos', ComboController::class);
+Route::post('/products/import', [ProductController::class, 'importFromExcel'])->name('products.import');
+
 
 });
 

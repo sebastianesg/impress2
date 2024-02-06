@@ -5,6 +5,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Product;
 use App\Models\Variable;
 use App\Models\Client;
+use App\Models\Combo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
@@ -119,16 +120,47 @@ class ProductController extends Controller
     public function api()
     {
         $products = Product::all();
+        $combos = Combo::with('products')->get();
     
-        $data = [];
+        $data = [
+            'products' => [],
+            'combos' => [],
+        ];
+    
+        // Productos
         foreach ($products as $product) {
-            $data[] = [
+            $data['products'][] = [
                 'id' => $product->id,
                 'name' => $product->name,
                 'price' => $product->price,
+                'type' => 'product',
             ];
         }
-        return response()->json(['products' => $data]);
+    
+        // Combos
+        foreach ($combos as $combo) {
+            $comboData = [
+                'id' => $combo->id,
+                'name' => $combo->name,
+                'price' => $combo->price,
+                'type' => 'combo',
+                'descuento' => $combo->descuento,
+                'products' => [],
+            ];
+    
+            // Productos dentro del combo
+            foreach ($combo->products as $comboProduct) {
+                $comboData['products'][] = [
+                    'id' => $comboProduct->id,
+                    'name' => $comboProduct->name,
+                    'price' => $comboProduct->price,
+                ];
+            }
+    
+            $data['combos'][] = $comboData;
+        }
+    
+        return response()->json($data);
     }
     public function getPdfPrice()
     {
@@ -187,5 +219,23 @@ class ProductController extends Controller
     public function showImportForm()
     {
         return view('cms.products.import');
+    }
+
+    public function importFromExcel(Request $request)
+    {
+        $request->validate([
+            'excel_file' => 'required|mimes:xlsx,xls',
+        ]);
+
+        try {
+            $file = $request->file('excel_file');
+
+            // Importar datos desde el archivo Excel
+            Excel::import(new ProductsImport, $file);
+
+            return redirect()->route('products.index')->with('success', 'Productos importados correctamente.');
+        } catch (\Exception $e) {
+            return redirect()->route('products.index')->with('error', 'Error al importar productos: ' . $e->getMessage());
+        }
     }
 }
